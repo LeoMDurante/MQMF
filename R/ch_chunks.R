@@ -421,147 +421,147 @@ chapter2 <- function(verbose=TRUE) {
 #' mtext("nt+1",side=2,outer=T,line=0.0,font=7,cex=1.0)    
 #' par(oldpar)    # this line not in book
 #' 
-#' ### Determinism    
-#' ## Age-Structured Modelling Concepts    
-#' ### Survivorship in a Cohort    
-#' # R-chunk 13 pages 48 - 49
-#' #Exponential population declines under different Z. Fig 3.6   
-#'  
-#' yrs <- 50;  yrs1 <- yrs + 1 # to leave room for B[0]    
-#' years <- seq(0,yrs,1)    
-#' B0 <- 1000        # now alternative total mortality rates    
-#' Z <- c(0.05,0.1,0.2,0.4,0.55)     
-#' nZ <- length(Z)    
-#' Bt <- matrix(0,nrow=yrs1,ncol=nZ,dimnames=list(years,Z))    
-#' Bt[1,] <- B0    
-#' for (j in 1:nZ) for (i in 2:yrs1) Bt[i,j] <- Bt[(i-1),j]*exp(-Z[j])    
-#' oldp <- plot1(years,Bt[,1],xlab="Years",ylab="Population Size",lwd=2)    
-#' if (nZ > 1) for (j in 2:nZ) lines(years,Bt[,j],lwd=2,col=j,lty=j)    
-#' legend("topright",legend=paste0("Z = ",Z),col=1:nZ,lwd=3,    
-#'        bty="n",cex=1,lty=1:5)     
-#' par(oldp)  # this line not in book
-#' 
+### Determinism    
+## Age-Structured Modelling Concepts    
+### Survivorship in a Cohort    
+# R-chunk 13 pages 48 - 49
+#Exponential population declines under different Z. Fig 3.6   
+  
+yrs <- 50;  yrs1 <- yrs + 1 # to leave room for B[0]    
+years <- seq(0,yrs,1)
+B0 <- 1000        # now alternative total mortality rates
+Z <- c(0.05,0.1,0.2,0.4,0.55)
+nZ <- length(Z)
+Bt <- matrix(0,nrow=yrs1,ncol=nZ,dimnames=list(years,Z))
+Bt[1,] <- B0
+for (j in 1:nZ) for (i in 2:yrs1) Bt[i,j] <- Bt[(i-1),j]*exp(-Z[j])
+oldp <- plot1(years,Bt[,1],xlab="Years",ylab="Population Size",lwd=2)
+if (nZ > 1) for (j in 2:nZ) lines(years,Bt[,j],lwd=2,col=j,lty=j)
+legend("topright",legend=paste0("Z = ",Z),col=1:nZ,lwd=3,
+       bty="n",cex=1,lty=1:5)
+par(oldp)  # this line not in book
+
 #' ### Instantaneous vs Annual Mortality Rates    
 #' # R-chunk 14 page 51
 #' #Prepare matrix of harvest rate vs time to appoximate F   
-#'  
-#' Z <- -log(0.5)    
-#' timediv <- c(2,4,12,52,365,730,2920,8760,525600)    
-#' yrfrac <- 1/timediv    
-#' names(yrfrac) <- c("6mth","3mth","1mth","1wk","1d","12h","3h","1h","1m")    
-#' nfrac <- length(yrfrac)    
-#' columns <- c("yrfrac","divisor","yrfracH","Remain")    
-#' result <- matrix(0,nrow=nfrac,ncol=length(columns),    
-#'                  dimnames=list(names(yrfrac),columns))    
-#' for (i in 1:nfrac) {    
-#'   timestepmort <- Z/timediv[i]     
-#'   N <- 1000    
-#'   for (j in 1:timediv[i]) N <- N * (1-timestepmort)    
-#'   result[i,] <- c(yrfrac[i],timediv[i],timestepmort,N)    
-#' }    
-#' 
-#' 
-#' # R-chunk 15 page 51 Table 3.3, code not shown in book
-#' #output of constant Z for shorter and shorter periods    
-#' 
-#' kable(result,digits=c(10,0,8,4))    
-#' 
-#' 
+  
+Z <- -log(0.5)    
+timediv <- c(2,4,12,52,365,730,2920,8760,525600)    
+yrfrac <- 1/timediv    
+names(yrfrac) <- c("6mth","3mth","1mth","1wk","1d","12h","3h","1h","1m")
+nfrac <- length(yrfrac)
+columns <- c("yrfrac","divisor","yrfracH","Remain")
+result <- matrix(0,nrow=nfrac,ncol=length(columns),
+                 dimnames=list(names(yrfrac),columns))
+for (i in 1:nfrac) {
+  timestepmort <- Z/timediv[i]
+  N <- 1000
+  for (j in 1:timediv[i]) N <- N * (1-timestepmort)
+  result[i,] <- c(yrfrac[i],timediv[i],timestepmort,N)
+}
+
+
+ # R-chunk 15 page 51 Table 3.3, code not shown in book
+ #output of constant Z for shorter and shorter periods    
+ library(knitr)
+ kable(result,digits=c(10,0,8,4))    
+
+ 
 #' # R-chunk 16 page 51
 #' #Annual harvest rate against instantaneous F, Fig 3.7  
-#'   
-#' Fi <- seq(0.001,2,0.001)    
-#' H <- 1 - exp(-Fi)    
-#' oldpar <- parset()  # a wrapper for simplifying defining the par values    
-#' plot(Fi,H,type="l",lwd=2,panel.first=grid(),xlab="Instantaneous Fishing Mortality F",    
-#'      ylab="Annual Proportion Mortality H")    
-#' lines(c(0,1),c(0,1),lwd=2,lty=2,col=2)    
-#' par(oldpar)   # this line not in book
-#' 
-#' 
+   
+Fi <- seq(0.001,2,0.001)
+H <- 1 - exp(-Fi)
+oldpar <- parset()  # a wrapper for simplifying defining the par values
+plot(Fi,H,type="l",lwd=2,panel.first=grid(),xlab="Instantaneous Fishing Mortality F",
+     ylab="Annual Proportion Mortality H")
+lines(c(0,1),c(0,1),lwd=2,lty=2,col=2)
+par(oldpar)   # this line not in book
+
+
 #' ## Simple Yield per Recruit    
 #' # R-chunk 17  page 53
 #' # Simple Yield-per-Recruit see Russell (1942)   
 #'  
-#' age <- 1:11;  nage <- length(age); N0 <- 1000  # some definitions    
-#' # weight-at-age values    
-#' WaA <- c(NA,0.082,0.175,0.283,0.4,0.523,0.7,0.85,0.925,0.99,1.0)    
-#' # now the harvest rates    
-#' H <- c(0.01,0.06,0.11,0.16,0.21,0.26,0.31,0.36,0.55,0.8)    
-#' nH <- length(H)    
-#' NaA <- matrix(0,nrow=nage,ncol=nH,dimnames=list(age,H)) # storage    
-#' CatchN <- NaA;  CatchW <- NaA      # define some storage matrices    
-#' for (i in 1:nH) {                # loop through the harvest rates    
-#'   NaA[1,i] <- N0  # start each harvest rate with initial numbers    
-#'   for (age in 2:nage) {  # loop through over-simplified dynamics    
-#'     NaA[age,i] <- NaA[(age-1),i] * (1 - H[i])    
-#'     CatchN[age,i] <- NaA[(age-1),i] - NaA[age,i]    
-#'   }    
-#'   CatchW[,i] <- CatchN[,i] * WaA    
-#' }                      # transpose the vector of total catches to    
-#' totC <- t(colSums(CatchW,na.rm=TRUE))   # simplify later printing    
-#' 
-#' 
+age <- 1:11;  nage <- length(age); N0 <- 1000  # some definitions
+# weight-at-age values
+WaA <- c(NA,0.082,0.175,0.283,0.4,0.523,0.7,0.85,0.925,0.99,1.0)
+# now the harvest rates
+H <- c(0.01,0.06,0.11,0.16,0.21,0.26,0.31,0.36,0.55,0.8)
+nH <- length(H)
+NaA <- matrix(0,nrow=nage,ncol=nH,dimnames=list(age,H)) # storage
+CatchN <- NaA;  CatchW <- NaA      # define some storage matrices
+for (i in 1:nH) {                # loop through the harvest rates
+  NaA[1,i] <- N0  # start each harvest rate with initial numbers
+  for (age in 2:nage) {  # loop through over-simplified dynamics
+    NaA[age,i] <- NaA[(age-1),i] * (1 - H[i])
+    CatchN[age,i] <- NaA[(age-1),i] - NaA[age,i]
+  }
+  CatchW[,i] <- CatchN[,i] * WaA
+}                      # transpose the vector of total catches to
+totC <- t(colSums(CatchW,na.rm=TRUE))   # simplify later printing
+
+
 #' # R-chunk 18 page 54 Table 3.4 code not shown in book
 #' #Tabulate numbers-at-age for different harvest rates  needs knitr
-#'   
-#' kable(NaA,digits=c(0,0,0,0,0,0,0,0,1,1),row.names=TRUE)    
-#' 
-#' 
+   
+kable(NaA,digits=c(0,0,0,0,0,0,0,0,1,1),row.names=TRUE)    
+ 
+
 #' # R-chunk 19 page 54, Table 3.5, code not shown in book.
 #' #Tabulate Weight-at-age for different harvest rates   
-#'  
-#' kable(CatchW[2:11,],digits=c(2,2,2,2,2,2,2,2,2,2),row.names=TRUE)    
-#' 
-#' 
+
+kable(CatchW[2:11,],digits=c(2,2,2,2,2,2,2,2,2,2),row.names=TRUE)
+
+
 #' # R-chunk 20 page 54, Table 3.6, code not shown in book.
 #' #Total weights vs Harvest rate   
-#'  
-#' kable(totC,digits=c(1,1,1,1,1,1,1,1,1,1))    
-#' 
-#' 
+
+kable(totC,digits=c(1,1,1,1,1,1,1,1,1,1))
+
+
 #' # R-chunk 21 page 55
 #' #Use MQMF::plot1 for a quick plot of the total catches. Figure 3.8    
-#' 
-#' oldpar <- plot1(H,totC,xlab="Harvest Rate",ylab="Total Yield",lwd=2)    
-#' par(oldpar) # to reset the par values if desired
-#' 
-#' ### Selectivity in Yield-per-Recruit    
-#' # R-chunk 22 Page 56
-#' #Logistic S shaped cureve for maturity    
-#' 
-#' ages <- seq(0,50,1)    
-#' sel1 <- mature(-3.650425,0.146017,sizeage=ages) #-3.65/0.146=25    
-#' sel2 <- mature(-6,0.2,ages)    
-#' sel3 <- mature(-6,0.24,ages)    
-#' oldp <- plot1(ages,sel1,xlab="Age Yrs",ylab="Selectivity",cex=0.75,lwd=2)    
-#' lines(ages,sel2,col=2,lwd=2,lty=2)    
-#' lines(ages,sel3,col=3,lwd=2,lty=3)    
-#' abline(v=25,col="grey",lty=2)     
-#' abline(h=c(0.25,0.5,0.75),col="grey",lty=2)    
-#' legend("topleft",c("25_15.04","30_10.986","25_9.155"),col=c(1,2,3),    
-#'        lwd=3,cex=1.1,bty="n",lty=1:3)    
-#' par(oldp)
-#' 
-#' ### The Baranov Catch Equation    
-#' # R-chunk 23 Page 58
-#' # Baranov catch equation  
-#'   
-#' age <- 0:12;  nage <- length(age)     
-#' sa <-mature(-4,2,age) #selectivity-at-age    
-#' H <- 0.2;  M <- 0.35    
-#' FF <- -log(1 - H)#Fully selected instantaneous fishing mortality    
-#' Ft <- sa * FF     # instantaneous Fishing mortality-at-age    
-#' N0 <- 1000    
-#' out <- cbind(bce(M,Ft,N0,age),"Select"=sa)  # out becomes Table 3.7    
-#' 
-#' 
-#' # R-chunk 24 page 59, Table 3.7, code not shown in book.
-#' #tabulate output from Baranov Catch Equations     
-#' 
-#' kable(out,digits=c(3,3,3,3))    
-#' 
-#' 
+ 
+oldpar <- plot1(H,totC,xlab="Harvest Rate",ylab="Total Yield",lwd=2)    
+par(oldpar) # to reset the par values if desired
+
+### Selectivity in Yield-per-Recruit
+# R-chunk 22 Page 56
+#Logistic S shaped cureve for maturity
+
+ages <- seq(0,50,1)
+sel1 <- mature(-3.650425,0.146017,sizeage=ages) #-3.65/0.146=25
+sel2 <- mature(-6,0.2,ages)
+sel3 <- mature(-6,0.24,ages)
+oldp <- plot1(ages,sel1,xlab="Age Yrs",ylab="Selectivity",cex=0.75,lwd=2)
+lines(ages,sel2,col=2,lwd=2,lty=2)
+lines(ages,sel3,col=3,lwd=2,lty=3)
+abline(v=25,col="grey",lty=2)
+abline(h=c(0.25,0.5,0.75),col="grey",lty=2)
+legend("topleft",c("25_15.04","30_10.986","25_9.155"),col=c(1,2,3),
+       lwd=3,cex=1.1,bty="n",lty=1:3)
+par(oldp)
+
+### The Baranov Catch Equation
+# R-chunk 23 Page 58
+# Baranov catch equation
+
+age <- 0:12;  nage <- length(age)
+sa <-mature(-4,2,age) #selectivity-at-age
+H <- 0.2;  M <- 0.35
+FF <- -log(1 - H)#Fully selected instantaneous fishing mortality
+Ft <- sa * FF     # instantaneous Fishing mortality-at-age
+N0 <- 1000
+out <- cbind(bce(M,Ft,N0,age),"Select"=sa)  # out becomes Table 3.7
+
+
+# R-chunk 24 page 59, Table 3.7, code not shown in book.
+#tabulate output from Baranov Catch Equations
+
+kable(out,digits=c(3,3,3,3))
+
+
 #' ### Growth and Weight-at-Age   
 #' ## Full Yield-per-Recruit    
 #' # R-chunk 25 Page 60 - 61
