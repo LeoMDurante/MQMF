@@ -1,3 +1,5 @@
+library(MQMF)
+library(knitr)
 
 # chapter2 --------
 
@@ -562,50 +564,52 @@ out <- cbind(bce(M,Ft,N0,age),"Select"=sa)  # out becomes Table 3.7
 kable(out,digits=c(3,3,3,3))
 
 
-#' ### Growth and Weight-at-Age   
-#' ## Full Yield-per-Recruit    
-#' # R-chunk 25 Page 60 - 61
-#' # A more complete YPR analysis    
-#' 
-#' age <- 0:20;  nage <- length(age) #storage vectors and matrices    
-#' laa <- vB(c(50.0,0.25,-1.5),age) # length-at-age    
-#' WaA <- (0.015 * laa ^ 3.0)/1000  # weight-at-age as kg    
-#' H <- seq(0.01,0.65,0.05);  nH <- length(H)       
-#' FF <- round(-log(1 - H),5)  # Fully selected fishing mortality    
-#' N0 <- 1000    
-#' M <- 0.1    
-#' numt <- matrix(0,nrow=nage,ncol=nH,dimnames=list(age,FF))    
-#' catchN <- matrix(0,nrow=nage,ncol=nH,dimnames=list(age,FF))    
-#' as50 <- c(1,2,3)      
-#' yield <- matrix(0,nrow=nH,ncol=length(as50),dimnames=list(H,as50))    
-#' for (sel in 1:length(as50)) {    
-#'   sa <- logist(as50[sel],1.0,age)  # selectivity-at-age    
-#'   for (harv in 1:nH) {    
-#'     Ft <- sa * FF[harv]      # Fishing mortality-at-age    
-#'     out <- bce(M,Ft,N0,age)    
-#'     numt[,harv] <- out[,"Nt"]    
-#'     catchN[,harv] <- out[,"Catch"]    
-#'     yield[harv,sel] <- sum(out[,"Catch"] * WaA,na.rm=TRUE)    
-#'   } # end of harv loop    
-#' } # end of sel loop    
-#' 
-#' 
-#' # R-chunk 26  Page 61
-#' #A full YPR analysis  Figure 3.10    
-#' 
-#' oldp <- plot1(H,yield[,3],xlab="Harvest Rate",ylab="Yield",cex=0.75,lwd=2)    
-#' lines(H,yield[,2],lwd=2,col=2,lty=2)    
-#' lines(H,yield[,1],lwd=2,col=3,lty=3)    
-#' legend("bottomright",legend=as50,col=c(3,2,1),lwd=3,bty="n",    
-#'        cex=1.0,lty=c(3,2,1))     
-#' par(oldp)
-#' 
-#' # R-chunk 27 page 62, Table 3.8, code not shown in book.
-#' #Tabulate yield-per-recruit using Baranoc catch equation   
-#'  
-#' kable(yield,digits=c(2,3,3,3))    
-#' 
-#' }
+### Growth and Weight-at-Age
+## Full Yield-per-Recruit
+# R-chunk 25 Page 60 - 61
+# A more complete YPR analysis
+
+age <- 0:20;  nage <- length(age) #storage vectors and matrices
+laa <- vB(c(50.0,0.25,-1.5),age) # length-at-age
+WaA <- (0.015 * laa ^ 3.0)/1000  # weight-at-age as kg
+H <- seq(0.01,0.65,0.05);  nH <- length(H)
+FF <- round(-log(1 - H),5)  # Fully selected fishing mortality
+N0 <- 1000
+M <- 0.1
+numt <- matrix(0,nrow=nage,ncol=nH,dimnames=list(age,FF))
+catchN <- matrix(0,nrow=nage,ncol=nH,dimnames=list(age,FF))
+as50 <- c(1,2,3)
+yield <- matrix(0,nrow=nH,ncol=length(as50),dimnames=list(H,as50))
+for (sel in 1:length(as50)) {
+  sa <- logist(as50[sel],1.0,age)  # selectivity-at-age
+  for (harv in 1:nH) {
+    Ft <- sa * FF[harv]      # Fishing mortality-at-age
+    out <- bce(M,Ft,N0,age)
+    numt[,harv] <- out[,"Nt"]
+    catchN[,harv] <- out[,"Catch"]
+    yield[harv,sel] <- sum(out[,"Catch"] * WaA,na.rm=TRUE)
+  } # end of harv loop
+} # end of sel loop
+
+
+# R-chunk 26  Page 61
+#A full YPR analysis  Figure 3.10
+
+oldp <- plot1(H,yield[,3],xlab="Harvest Rate",ylab="Yield",cex=0.75,lwd=2)
+lines(H,yield[,2],lwd=2,col=2,lty=2)
+lines(H,yield[,1],lwd=2,col=3,lty=3)
+legend("bottomright",legend=as50,col=c(3,2,1),lwd=3,bty="n",
+       cex=1.0,lty=c(3,2,1))
+par(oldp)
+
+# R-chunk 27 page 62, Table 3.8, code not shown in book.
+#Tabulate yield-per-recruit using Baranoc catch equation
+
+kable(yield,digits=c(2,3,3,3))
+
+}
+
+
 chapter3 <- function(verbose=TRUE) {
   if (verbose) {
     cat("Chapter 3: Simple Population Models \n\n")
